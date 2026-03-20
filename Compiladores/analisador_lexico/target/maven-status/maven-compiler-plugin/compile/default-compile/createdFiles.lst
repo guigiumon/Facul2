@@ -1,0 +1,5 @@
+com/mycompany/analisador_lexico/TipoToken.class
+com/mycompany/analisador_lexico/AnaliseLexica.class
+com/mycompany/analisador_lexico/Token.class
+com/mycompany/analisador_lexico/LeitorArquivo.class
+com/mycompany/analisador_lexico/Analisador_lexico.class
