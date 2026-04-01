@@ -46,194 +46,194 @@ public class AnaliseLexica {
         }
            
         //DEC
-        if (c == 'D') {
-            c = (char) ldat.lerProximoCaractere();
-            if (c == 'E') {
-                c = (char) ldat.lerProximoCaractere();
-                if (c == 'C') return new Token("DEC", TipoToken.PCDec); // ---- PCDec -----
-            }
-        } 
         
-        //PROG
-        else if (c == 'P') {
-            c = (char) ldat.lerProximoCaractere();
-            if (c == 'R') {
+        switch(c) {
+            case 'D': //DEC
                 c = (char) ldat.lerProximoCaractere();
-                if (c == 'O') {
+                if (c == 'E') {
                     c = (char) ldat.lerProximoCaractere();
-                    if (c == 'G') return new Token("PROG", TipoToken.PCProg); // ---- PCProg -----
+                    if (c == 'C') return new Token("DEC", TipoToken.PCDec); // ---- PCDec -----
                 }
-            }
-        }
-        
-        //INT INI e IMPRIMIR
-        else if(c == 'I') {
-            c = (char) ldat.lerProximoCaractere();
-            if(c == 'N') {
+                break;
+            
+            case 'P': //PROG
                 c = (char) ldat.lerProximoCaractere();
-                if(c == 'T') {
-                    return new Token("INT", TipoToken.PCInt); // ---- PCInt -----
-                } else if(c == 'I') {
-                    return new Token("INI", TipoToken.PCIni); // ---- PCIni -----
-                }
-            } else if(c == 'M') {
-                c = (char) ldat.lerProximoCaractere();
-                if(c == 'P') {
-                    if(c == 'R') {
+                if (c == 'R') {
+                    c = (char) ldat.lerProximoCaractere();
+                    if (c == 'O') {
                         c = (char) ldat.lerProximoCaractere();
-                        if(c == 'I') {
-                            c = (char) ldat.lerProximoCaractere();
-                            if(c == 'M') {
-                            c = (char) ldat.lerProximoCaractere();
+                        if (c == 'G') return new Token("PROG", TipoToken.PCProg); // ---- PCProg -----
+                    }
+                }
+                break;
+            
+            case 'I'://INT INI e IMPRIMIR
+                c = (char) ldat.lerProximoCaractere();
+                switch(c) {
+                    case 'N':
+                        switch(c) {
+                            case 'T': 
+                                return new Token("INT", TipoToken.PCInt); // ---- PCInt -----
+                            
+                            case 'I':
+                                return new Token("INI", TipoToken.PCIni); // ---- PCIni -----
+                        }
+                    case 'M': 
+                        c = (char) ldat.lerProximoCaractere();
+                        if(c == 'P') {
+                            if(c == 'R') {
+                                c = (char) ldat.lerProximoCaractere();
                                 if(c == 'I') {
                                     c = (char) ldat.lerProximoCaractere();
-                                        if(c == 'R') {
-                                            return new Token("IMPRIMIR", TipoToken.PCImprimir); // ---- PCImprimir -----
+                                    if(c == 'M') {
+                                    c = (char) ldat.lerProximoCaractere();
+                                        if(c == 'I') {
+                                            c = (char) ldat.lerProximoCaractere();
+                                                if(c == 'R') {
+                                                    return new Token("IMPRIMIR", TipoToken.PCImprimir); // ---- PCImprimir -----
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
+                }
+                break;
+            
+            case 'L': //LER
+                c = (char) ldat.lerProximoCaractere();
+                if (c == 'E') {
+                    c = (char) ldat.lerProximoCaractere();
+                    if (c == 'R') return new Token("LER", TipoToken.PCLer); // ---- PCLer -----
+                }
+                break;
+            
+            case 'R': //REAL
+                c = (char) ldat.lerProximoCaractere();
+                if (c == 'E') {
+                    c = (char) ldat.lerProximoCaractere();
+                    if (c == 'A') {
+                        c = (char) ldat.lerProximoCaractere();
+                        if (c == 'L') return new Token("REAL", TipoToken.PCReal); // ---- PCReal -----
                     }
                 }
-            }
-        }
-
-        //LER
-        else if (c == 'L') {
-            c = (char) ldat.lerProximoCaractere();
-            if (c == 'E') {
+                break;
+            
+            case 'S': // SE, SENAO
                 c = (char) ldat.lerProximoCaractere();
-                if (c == 'R') return new Token("LER", TipoToken.PCLer); // ---- PCLer -----
-            }
-        } 
-        
-        //REAL
-        else if (c == 'R') {
-            c = (char) ldat.lerProximoCaractere();
-            if (c == 'E') {
-                c = (char) ldat.lerProximoCaractere();
-                if (c == 'A') {
+                if(c == 'E') {
                     c = (char) ldat.lerProximoCaractere();
-                    if (c == 'L') return new Token("REAL", TipoToken.PCReal); // ---- PCReal -----
+                    this.look_forward = c;
+                    if (c == 'N') {
+                        c = (char) ldat.lerProximoCaractere();
+                        if(c == 'A') {
+                            c = (char) ldat.lerProximoCaractere();
+                            if(c == 'O') {
+                                return new Token("SENAO", TipoToken.PCSenao); // ---- PCSenao -----
+                            }
+                        }
+                    } else {
+                        return new Token("SE", TipoToken.PCSe); // ---- PCSe -----
+                    }
                 }
-            }
-        }
-        
-        //SE. SENAO
-        else if (c == 'S') {
-            c = (char) ldat.lerProximoCaractere();
-            if(c == 'E') {
+                break;
+            
+            case 'E': // E, ENTAO, ENQTO
                 c = (char) ldat.lerProximoCaractere();
                 this.look_forward = c;
-                if (c == 'N') {
+                if(c == 'N') {
                     c = (char) ldat.lerProximoCaractere();
-                    if(c == 'A') {
-                        c = (char) ldat.lerProximoCaractere();
-                        if(c == 'O') {
-                            return new Token("SENAO", TipoToken.PCSenao); // ---- PCSenao -----
+                    switch(c){
+                        case 'Q':
+                            c = (char) ldat.lerProximoCaractere();
+                            if(c == 'T') {
+                                c = (char) ldat.lerProximoCaractere();
+                                if(c == 'O') {
+                                    return new Token("ENQTO", TipoToken.PCEnqto); // ---- PCEnqto -----
+                                }
+                            }
+                            break;
+                        case 'T':
+                            if(c == 'A') {
+                                c = (char) ldat.lerProximoCaractere();
+                                if(c == 'O') {
+                                    return new Token("ENTAO", TipoToken.PCEntao); // ---- PCEntao -----
+                                }
+                            }
                         }
-                    }
                 } else {
-                    return new Token("SE", TipoToken.PCSe); // ---- PCSe -----
+                    return new Token("E", TipoToken.OpBoolE); // ---- OpBoolE -----
                 }
-            }
-        }
-        
-        // E, ENTAO, ENQTO
-        else if (c == 'E') {
-            c = (char) ldat.lerProximoCaractere();
-            this.look_forward = c;
-            if(c == 'N') {
+                break;
+            
+            case 'F': //FIM
                 c = (char) ldat.lerProximoCaractere();
-                if (c == 'Q') {
+                if (c == 'I') {
                     c = (char) ldat.lerProximoCaractere();
-                    if(c == 'T') {
-                        c = (char) ldat.lerProximoCaractere();
-                        if(c == 'O') {
-                            return new Token("ENQTO", TipoToken.PCEnqto); // ---- PCEnqto -----
-                        }
-                    }
-                } else if( c == 'T') {
-                    if(c == 'A') {
-                        c = (char) ldat.lerProximoCaractere();
-                        if(c == 'O') {
-                            return new Token("ENTAO", TipoToken.PCEntao); // ---- PCEntao -----
-                        }
-                    }
+                    if (c == 'M') return new Token("FIM", TipoToken.PCFim); // ---- PCFim -----
                 }
-            } else {
-                return new Token("E", TipoToken.OpBoolE); // ---- OpBoolE -----
-            }
-        }
-        
-        //FIM
-        else if (c == 'F') {
-            c = (char) ldat.lerProximoCaractere();
-            if (c == 'I') {
+                break;
+                
+            case 'O': //OU
                 c = (char) ldat.lerProximoCaractere();
-                if (c == 'M') return new Token("FIM", TipoToken.PCFim); // ---- PCFim -----
-            }
-        } 
-        
-        else if (c == 'O') {
-            c = (char) ldat.lerProximoCaractere();
-            if (c == 'U') return new Token("OU", TipoToken.OpBoolOu); // ---- OpBoolOu -----
-        } 
-        
-        //operadores aritmericos + - * /
-        else if (c == '+') return new Token("+", TipoToken.OpAritSoma); // ---- OpAritSoma -----
-        else if (c == '-') return new Token("-", TipoToken.OpAritSub); // ---- OpAritSub -----
-        else if (c == '*') return new Token("*", TipoToken.OpAritMult); // ---- OpAritMult -----
-        else if (c == '/') return new Token("/", TipoToken.OpAritDiv); // ---- OpAritDiv -----
-
-        
-        // : e :=
-        else if (c == ':') {
-            c = (char) ldat.lerProximoCaractere();
-            this.look_forward = c;
-            if (c == '=') return new Token(":=", TipoToken.Atrib); // ---- Atrib -----
-            else {
-                return new Token(":", TipoToken.Delim); // ---- Delim -----
-            }
+                if (c == 'U') return new Token("OU", TipoToken.OpBoolOu); // ---- OpBoolOu -----
+                break;
+            
+            case '+': //+
+                return new Token("+", TipoToken.OpAritSoma); // ---- OpAritSoma -----
+                
+            case '-': //-
+                return new Token("-", TipoToken.OpAritSub); // ---- OpAritSub -----
+                
+            case '*': //*
+                return new Token("*", TipoToken.OpAritMult); // ---- OpAritMult -----
+            
+            case '/': // /
+                return new Token("/", TipoToken.OpAritDiv); // ---- OpAritDiv -----
+                
+            case ':': //: e :=
+                c = (char) ldat.lerProximoCaractere();
+                this.look_forward = c;
+                if (c == '=') return new Token(":=", TipoToken.Atrib); // ---- Atrib -----
+                else {
+                    return new Token(":", TipoToken.Delim); // ---- Delim -----
+                }
+            
+            case '<': //<= <
+                c = (char) ldat.lerProximoCaractere();
+                this.look_forward = c;
+                if (c == '=') return new Token("<=", TipoToken.OpRelMenorIgual); // ---- OpRelMenorIgual -----
+                return new Token("<", TipoToken.OpRelMenor);  // ---- OpRelMenor -----
+            
+            case '>':  //> >=
+                c = (char) ldat.lerProximoCaractere();
+                this.look_forward = c;
+                if (c == '=') return new Token(">=", TipoToken.OpRelMaiorIgual); // ---- OpRelMaiorIgual -----
+                return new Token(">", TipoToken.OpRelMaior);  // ---- OpRelMaior -----
+            
+            case '=': //  ==
+                this.look_forward = c;
+                c = (char) ldat.lerProximoCaractere();
+                if (c == '=') return new Token("==", TipoToken.OpRelIgual); // ---- OpRelIgual -----
+                
+            case '!': //  !=
+                c = (char) ldat.lerProximoCaractere();
+                if (c == '=') {
+                    return new Token("!=", TipoToken.OpRelDif); // ---- OpRelDif -----
+                }
+                
+            case '(': // (
+                return new Token("(", TipoToken.AbrePar); // ---- AbrePar -----
+            
+            case ')': // )
+                return new Token(")", TipoToken.FechaPar); // ---- FechaPar -----
+            
+            default:
+                return null;
         }
-
-        //<= <
-        else if (c == '<') {
-            c = (char) ldat.lerProximoCaractere();
-            this.look_forward = c;
-            if (c == '=') return new Token("<=", TipoToken.OpRelMenorIgual); // ---- OpRelMenorIgual -----
-            return new Token("<", TipoToken.OpRelMenor);  // ---- OpRelMenor -----
-        }
         
-        // > >=
-        else if (c == '>') {
-            c = (char) ldat.lerProximoCaractere();
-            this.look_forward = c;
-            if (c == '=') return new Token(">=", TipoToken.OpRelMaiorIgual); // ---- OpRelMaiorIgual -----
-            return new Token(">", TipoToken.OpRelMaior);  // ---- OpRelMaior -----
-        }
-        
-        //  ==
-        else if (c == '=') {
-            this.look_forward = c;
-            c = (char) ldat.lerProximoCaractere();
-            if (c == '=') return new Token("==", TipoToken.OpRelIgual); // ---- OpRelIgual -----
-        }
-        
-        //  !=
-        else if (c == '!') {
-            c = (char) ldat.lerProximoCaractere();
-            if (c == '=') {
-                return new Token("!=", TipoToken.OpRelDif); // ---- OpRelDif -----
-            }
-        }
-
-        //parenteses 
-        else if (c == '(') return new Token("(", TipoToken.AbrePar); // ---- AbrePar -----
-        else if (c == ')') return new Token(")", TipoToken.FechaPar); // ---- FechaPar -----
-
         //numeros
-        else if (Character.isDigit(c)) {
+        if (Character.isDigit(c)) {
             String numero = "";
             while(Character.isDigit(c) || c == '.') {
                 numero += Character.toString(c);

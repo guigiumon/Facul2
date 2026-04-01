@@ -13,9 +13,7 @@ public class Analisador_lexico {
     public static void main(String[] args) {
         AnaliseLexica lex=new AnaliseLexica("programa.gyh");
         
-        while(lex.geteof() != true) {
-            lex.NovoToken();    
-        }
+        //iniciar analise!!!!!!!!!!!!!!!
         
         System.out.println("Ajeitar tudo nessa bomba!!!!!!!!!!!!");
         
