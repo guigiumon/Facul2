@@ -15,26 +15,31 @@ public class AnaliseLexica {
         ldat=new LeitorArquivo(nome);
     }
     
-    public void NovoToken(){
+    public Token NovoToken(){
+        Token token = null;
+        
         if (this.look_forward != '#') {
             char aux = this.look_forward;
             look_forward='#';
-            IdentificaToken(aux);
-        }
-        
-        int caractere=ldat.lerProximoCaractere();
-        
-        while(caractere >=0) {
+            token = IdentificaToken(aux);
+        } else {
+            int caractere=ldat.lerProximoCaractere();
             char c=(char) caractere;
-            
-            IdentificaToken(c);
-            
-            caractere=ldat.lerProximoCaractere();
+
+            token = IdentificaToken(c);
         }
+        return token;
     }
     
     public Token IdentificaToken(char c) {
         
+        if((int) c == -1) {
+            return null;
+        }
+        
+        if(c == '\n') {
+            c = (char) ldat.lerProximoCaractere();
+        }
         //nome de variável
         if (Character.isLowerCase(c)) {
             String nome_var = "";
@@ -72,12 +77,14 @@ public class AnaliseLexica {
                 switch(c) {
                     case 'N':
                         switch(c) {
-                            case 'T': 
+                            case 'T' -> { 
                                 return new Token("INT", TipoToken.PCInt); // ---- PCInt -----
-                            
-                            case 'I':
+                            }
+                            case 'I' -> {
                                 return new Token("INI", TipoToken.PCIni); // ---- PCIni -----
+                            }
                         }
+
                     case 'M': 
                         c = (char) ldat.lerProximoCaractere();
                         if(c == 'P') {
@@ -144,7 +151,7 @@ public class AnaliseLexica {
                 if(c == 'N') {
                     c = (char) ldat.lerProximoCaractere();
                     switch(c){
-                        case 'Q':
+                        case 'Q' -> {
                             c = (char) ldat.lerProximoCaractere();
                             if(c == 'T') {
                                 c = (char) ldat.lerProximoCaractere();
@@ -152,8 +159,8 @@ public class AnaliseLexica {
                                     return new Token("ENQTO", TipoToken.PCEnqto); // ---- PCEnqto -----
                                 }
                             }
-                            break;
-                        case 'T':
+                        }
+                        case 'T' -> {
                             if(c == 'A') {
                                 c = (char) ldat.lerProximoCaractere();
                                 if(c == 'O') {
@@ -161,6 +168,7 @@ public class AnaliseLexica {
                                 }
                             }
                         }
+                    }
                 } else {
                     return new Token("E", TipoToken.OpBoolE); // ---- OpBoolE -----
                 }
