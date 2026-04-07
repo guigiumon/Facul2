@@ -391,7 +391,6 @@ public class AnaliseLexica {
                 return new Token(")", TipoToken.FechaPar); // ---- FechaPar -----
             
             default:
-                lexemaInexistente(this.lexema);
                 return null;
         }
         
