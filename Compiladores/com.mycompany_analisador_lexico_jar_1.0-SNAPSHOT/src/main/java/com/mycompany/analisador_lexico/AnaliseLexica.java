@@ -34,7 +34,18 @@ public class AnaliseLexica {
         } else {
             int caractere=ldat.lerProximoCaractere();
             char c=(char) caractere;
-
+            while (c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == '#') {
+                if (c == '#') {
+                    // Se for comentário, pula até o fim da linha
+                    while (c != '\n' && c != '\r' && (int)c != -1) {
+                        c = (char) ldat.lerProximoCaractere();
+                    }
+                } else {
+                    // Se for espaço/quebra de linha, só lê o próximo
+                    c = (char) ldat.lerProximoCaractere();
+                }
+            }
+            System.out.println(c);
             token = IdentificaToken(c);
         }
         return token;
@@ -59,7 +70,7 @@ public class AnaliseLexica {
         //nome de variável
         if (Character.isLowerCase(c)) {
             String nome_var = "";
-            while(Character.isLowerCase(c)) {
+            while(Character.isLowerCase(c) || Character.isDigit(c)) {
                 nome_var += Character.toString(c);
                 c = (char) ldat.lerProximoCaractere();
             }
@@ -136,6 +147,8 @@ public class AnaliseLexica {
                 c = (char) ldat.lerProximoCaractere();
                 switch(c) {
                     case 'N':
+                        constroiLexema(c);
+                        c = (char) ldat.lerProximoCaractere();
                         switch(c) {
                             case 'T' -> { 
                                 return new Token("INT", TipoToken.PCInt); // ---- PCInt -----
@@ -152,6 +165,8 @@ public class AnaliseLexica {
                         constroiLexema(c);
                         c = (char) ldat.lerProximoCaractere();
                         if(c == 'P') {
+                            constroiLexema(c);
+                            c = (char) ldat.lerProximoCaractere();
                             if(c == 'R') {
                                 constroiLexema(c);
                                 c = (char) ldat.lerProximoCaractere();
@@ -234,7 +249,10 @@ public class AnaliseLexica {
                     constroiLexema(c);
                     c = (char) ldat.lerProximoCaractere();
                     this.look_forward = c;
-                    if (c != 'N') return new Token("SE", TipoToken.PCSe); // ---- PCSe -----
+                    if (c != 'N') {
+                        this.look_forward = '#';
+                        return new Token("SE", TipoToken.PCSe);
+                    } // ---- PCSe -----
                     else {
                         constroiLexema(c);
                         c = (char) ldat.lerProximoCaractere();
@@ -259,7 +277,10 @@ public class AnaliseLexica {
                 constroiLexema(c);
                 c = (char) ldat.lerProximoCaractere();
                 this.look_forward = c;
-                if(c != 'N') return new Token("E", TipoToken.OpBoolE); // ---- OpBoolE -----
+                if(c != 'N') {
+                    this.look_forward = c;
+                    return new Token("E", TipoToken.OpBoolE);
+                } // ---- OpBoolE -----
                 else {
                     constroiLexema(c);
                     c = (char) ldat.lerProximoCaractere();
@@ -271,6 +292,7 @@ public class AnaliseLexica {
                                 constroiLexema(c);
                                 c = (char) ldat.lerProximoCaractere();
                                 if(c == 'O') {
+                                    this.look_forward = '#';
                                     return new Token("ENQTO", TipoToken.PCEnqto); // ---- PCEnqto -----
                                 } else {
                                     lexemaInexistente(this.lexema);
@@ -280,10 +302,13 @@ public class AnaliseLexica {
                             }
                         }
                         case 'T' -> {
+                            constroiLexema(c);
+                            c = (char) ldat.lerProximoCaractere();
                             if(c == 'A') {
                                 constroiLexema(c);
                                 c = (char) ldat.lerProximoCaractere();
                                 if(c == 'O') {
+                                    this.look_forward = '#';
                                     return new Token("ENTAO", TipoToken.PCEntao); // ---- PCEntao -----
                                 } else {
                                     lexemaInexistente(this.lexema);
@@ -339,12 +364,12 @@ public class AnaliseLexica {
                 return new Token("/", TipoToken.OpAritDiv); // ---- OpAritDiv -----
                 
             case ':': //: e :=
-                constroiLexema(c);
                 c = (char) ldat.lerProximoCaractere();
                 this.look_forward = c;
-                if (c != '=') {
-                    lexemaInexistente(this.lexema);
-                } else if (c == '=') return new Token(":=", TipoToken.Atrib); // ---- Atrib -----
+                if (c == '=') {
+                    this.look_forward = '#';
+                    return new Token(":=", TipoToken.Atrib);
+                } // ---- Atrib -----
                 return new Token(":", TipoToken.Delim); // ---- Delim -----
             
             case '<': //<= <
@@ -353,16 +378,21 @@ public class AnaliseLexica {
                 this.look_forward = c;
                 if (c != '=') {
                     lexemaInexistente(this.lexema);
-                } else if (c == '=') return new Token("<=", TipoToken.OpRelMenorIgual); // ---- OpRelMenorIgual -----
+                } else if (c == '=') {
+                    this.look_forward = '#';
+                    return new Token("<=", TipoToken.OpRelMenorIgual);
+                } // ---- OpRelMenorIgual -----
                 return new Token("<", TipoToken.OpRelMenor);  // ---- OpRelMenor -----
             
             case '>':  //> >=
                 constroiLexema(c);
                 c = (char) ldat.lerProximoCaractere();
                 this.look_forward = c;
-                if (c != '=') {
-                    lexemaInexistente(this.lexema);
-                } else if (c == '=') return new Token(">=", TipoToken.OpRelMaiorIgual); // ---- OpRelMaiorIgual -----
+                if (c == '=') {
+                    this.look_forward = '#';
+                    return new Token(">=", TipoToken.OpRelMaiorIgual);
+                } // ---- OpRelMaiorIgual -----
+                this.look_forward = '#';
                 return new Token(">", TipoToken.OpRelMaior);  // ---- OpRelMaior -----
             
             case '=': //  ==
@@ -370,6 +400,7 @@ public class AnaliseLexica {
                 constroiLexema(c);
                 c = (char) ldat.lerProximoCaractere();
                 if (c == '=') {
+                    this.look_forward = '#';
                     return new Token("==", TipoToken.OpRelIgual);// ---- OpRelIgual -----
                 } else {
                     lexemaInexistente(this.lexema);

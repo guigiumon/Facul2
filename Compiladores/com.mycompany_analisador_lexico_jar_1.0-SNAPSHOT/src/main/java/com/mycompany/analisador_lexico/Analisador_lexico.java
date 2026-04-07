@@ -11,7 +11,7 @@ package com.mycompany.analisador_lexico;
 public class Analisador_lexico {
 
     public static void main(String[] args) {
-        AnaliseLexica lex=new AnaliseLexica("programa.gyh");
+        AnaliseLexica lex=new AnaliseLexica("programa2.gyh");
         Token token;
         
         do {
