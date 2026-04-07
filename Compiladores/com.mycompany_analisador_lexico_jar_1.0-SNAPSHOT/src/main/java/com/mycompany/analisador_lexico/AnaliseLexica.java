@@ -37,9 +37,15 @@ public class AnaliseLexica {
             return null;
         }
         
-        if(c == '\n') {
-            c = (char) ldat.lerProximoCaractere();
+        if(c == '\r' || c == '\n') {
+            if(c == '\r') {
+                c = (char) ldat.lerProximoCaractere();
+            }
+            if(c == '\n') {
+                c = (char) ldat.lerProximoCaractere();
+            }
         }
+        
         //nome de variável
         if (Character.isLowerCase(c)) {
             String nome_var = "";

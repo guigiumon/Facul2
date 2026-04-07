@@ -18,10 +18,7 @@ public class Analisador_lexico {
             token = lex.NovoToken();
             if(token == null) break;
             System.out.print(token.toString());
-            System.out.println('1');
-        } while (token != null);
-        
-        //iniciar analise!!!!!!!!!!!!!!!
+        } while (true);
         
     }
 }
