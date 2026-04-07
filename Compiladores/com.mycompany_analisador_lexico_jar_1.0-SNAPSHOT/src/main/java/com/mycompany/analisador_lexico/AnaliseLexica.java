@@ -11,8 +11,13 @@ package com.mycompany.analisador_lexico;
 public class AnaliseLexica {
     public LeitorArquivo ldat;
     private char look_forward = '#'; // para casos de <,>,:
+    private String lexema = "";
     public AnaliseLexica(String nome){
         ldat=new LeitorArquivo(nome);
+    }
+    
+    public void constroiLexema(char letra){
+        this.lexema = this.lexema + letra;
     }
     
     public Token NovoToken(){
@@ -32,6 +37,7 @@ public class AnaliseLexica {
     }
     
     public Token IdentificaToken(char c) {
+        this.lexema = "";
         
         if((int) c == -1) {
             return null;
@@ -60,25 +66,45 @@ public class AnaliseLexica {
         
         switch(c) {
             case 'D': //DEC
+                constroiLexema(c);
                 c = (char) ldat.lerProximoCaractere();
                 if (c == 'E') {
+                    constroiLexema(c);
                     c = (char) ldat.lerProximoCaractere();
-                    if (c == 'C') return new Token("DEC", TipoToken.PCDec); // ---- PCDec -----
+                    if (c == 'C') {
+                        return new Token("DEC", TipoToken.PCDec);
+                    }  else {// ---- PCDec -----
+                        //ERRO --------------------------
+                    }
+                } else {
+                    //ERRO ---------------
                 }
                 break;
             
             case 'P': //PROG
+                constroiLexema(c);
                 c = (char) ldat.lerProximoCaractere();
                 if (c == 'R') {
+                    constroiLexema(c);
                     c = (char) ldat.lerProximoCaractere();
                     if (c == 'O') {
+                        constroiLexema(c);
                         c = (char) ldat.lerProximoCaractere();
-                        if (c == 'G') return new Token("PROG", TipoToken.PCProg); // ---- PCProg -----
+                        if (c == 'G') {
+                            return new Token("PROG", TipoToken.PCProg); // ---- PCProg -----
+                        } else {
+                            //ERRO --------------------------
+                        }
+                    } else {
+                        //ERRO ---------------
                     }
+                } else {
+                    //ERRO ---------------
                 }
                 break;
             
             case 'I'://INT INI e IMPRIMIR
+                constroiLexema(c);
                 c = (char) ldat.lerProximoCaractere();
                 switch(c) {
                     case 'N':
@@ -89,108 +115,187 @@ public class AnaliseLexica {
                             case 'I' -> {
                                 return new Token("INI", TipoToken.PCIni); // ---- PCIni -----
                             }
+                            default -> {
+                                //ERRO ---------------
+                            }
                         }
 
                     case 'M': 
+                        constroiLexema(c);
                         c = (char) ldat.lerProximoCaractere();
                         if(c == 'P') {
                             if(c == 'R') {
+                                constroiLexema(c);
                                 c = (char) ldat.lerProximoCaractere();
                                 if(c == 'I') {
+                                    constroiLexema(c);
                                     c = (char) ldat.lerProximoCaractere();
                                     if(c == 'M') {
-                                    c = (char) ldat.lerProximoCaractere();
+                                        constroiLexema(c);
+                                        c = (char) ldat.lerProximoCaractere();
                                         if(c == 'I') {
+                                            constroiLexema(c);
                                             c = (char) ldat.lerProximoCaractere();
-                                                if(c == 'R') {
-                                                    return new Token("IMPRIMIR", TipoToken.PCImprimir); // ---- PCImprimir -----
+                                            if(c == 'R') {
+                                                return new Token("IMPRIMIR", TipoToken.PCImprimir); // ---- PCImprimir -----
+                                            } else {
+                                                    //ERRO ---------------
+                                                }
+                                        } else {
+                                                //ERRO ---------------
                                             }
-                                        }
+                                    } else {
+                                        //ERRO ---------------
                                     }
+                                } else {
+                                    //ERRO ---------------
                                 }
+                            } else {
+                                //ERRO ---------------
                             }
+                        } else {
+                            //ERRO ---------------
                         }
+                    default: 
+                        //ERRO ---------------
                 }
                 break;
             
             case 'L': //LER
+                constroiLexema(c);
                 c = (char) ldat.lerProximoCaractere();
                 if (c == 'E') {
+                    constroiLexema(c);
                     c = (char) ldat.lerProximoCaractere();
-                    if (c == 'R') return new Token("LER", TipoToken.PCLer); // ---- PCLer -----
+                    if (c == 'R') {
+                        return new Token("LER", TipoToken.PCLer); // ---- PCLer -----
+                    } else {
+                        //ERRO ---------------
+                    }
+                } else {
+                    //ERRO ---------------
                 }
                 break;
             
             case 'R': //REAL
+                constroiLexema(c);
                 c = (char) ldat.lerProximoCaractere();
                 if (c == 'E') {
+                    constroiLexema(c);
                     c = (char) ldat.lerProximoCaractere();
                     if (c == 'A') {
+                        constroiLexema(c);
                         c = (char) ldat.lerProximoCaractere();
-                        if (c == 'L') return new Token("REAL", TipoToken.PCReal); // ---- PCReal -----
+                        if (c == 'L') {
+                            return new Token("REAL", TipoToken.PCReal); // ---- PCReal -----
+                        } else {
+                            //ERRO ---------------
+                        } 
+                    } else {
+                        //ERRO ---------------
                     }
+                } else {
+                    //ERRO ---------------
                 }
                 break;
             
             case 'S': // SE, SENAO
+                constroiLexema(c);
                 c = (char) ldat.lerProximoCaractere();
                 if(c == 'E') {
+                    constroiLexema(c);
                     c = (char) ldat.lerProximoCaractere();
                     this.look_forward = c;
-                    if (c == 'N') {
+                    if (c != 'N') return new Token("SE", TipoToken.PCSe); // ---- PCSe -----
+                    else {
+                        constroiLexema(c);
                         c = (char) ldat.lerProximoCaractere();
                         if(c == 'A') {
+                            constroiLexema(c);
                             c = (char) ldat.lerProximoCaractere();
                             if(c == 'O') {
                                 return new Token("SENAO", TipoToken.PCSenao); // ---- PCSenao -----
+                            } else {
+                                //ERRO ---------------
                             }
+                        } else {
+                            //ERRO ---------------
                         }
-                    } else {
-                        return new Token("SE", TipoToken.PCSe); // ---- PCSe -----
                     }
+                } else {
+                    //ERRO ---------------
                 }
                 break;
             
             case 'E': // E, ENTAO, ENQTO
+                constroiLexema(c);
                 c = (char) ldat.lerProximoCaractere();
                 this.look_forward = c;
-                if(c == 'N') {
+                if(c != 'N') return new Token("E", TipoToken.OpBoolE); // ---- OpBoolE -----
+                else {
+                    constroiLexema(c);
                     c = (char) ldat.lerProximoCaractere();
                     switch(c){
                         case 'Q' -> {
+                            constroiLexema(c);
                             c = (char) ldat.lerProximoCaractere();
                             if(c == 'T') {
+                                constroiLexema(c);
                                 c = (char) ldat.lerProximoCaractere();
                                 if(c == 'O') {
                                     return new Token("ENQTO", TipoToken.PCEnqto); // ---- PCEnqto -----
+                                } else {
+                                    //ERRO ---------------
                                 }
+                            } else {
+                                //ERRO ---------------
                             }
                         }
                         case 'T' -> {
                             if(c == 'A') {
+                                constroiLexema(c);
                                 c = (char) ldat.lerProximoCaractere();
                                 if(c == 'O') {
                                     return new Token("ENTAO", TipoToken.PCEntao); // ---- PCEntao -----
+                                } else {
+                                    //ERRO ---------------
                                 }
+                            } else {
+                                //ERRO ---------------
                             }
                         }
+                        default -> {
+                            //ERRO ---------------
+                        }
                     }
-                } else {
-                    return new Token("E", TipoToken.OpBoolE); // ---- OpBoolE -----
-                }
+                } 
                 break;
             
             case 'F': //FIM
+                constroiLexema(c);
                 c = (char) ldat.lerProximoCaractere();
                 if (c == 'I') {
+                    constroiLexema(c);
                     c = (char) ldat.lerProximoCaractere();
-                    if (c == 'M') return new Token("FIM", TipoToken.PCFim); // ---- PCFim -----
+                    if (c == 'M') {
+                        return new Token("FIM", TipoToken.PCFim); // ---- PCFim -----
+                    }  else {
+                        //ERRO ---------------
+                    }
+                } else {
+                    //ERRO ---------------
                 }
                 break;
                 
             case 'O': //OU
+                constroiLexema(c);
                 c = (char) ldat.lerProximoCaractere();
-                if (c == 'U') return new Token("OU", TipoToken.OpBoolOu); // ---- OpBoolOu -----
+                if (c == 'U') { 
+                    return new Token("OU", TipoToken.OpBoolOu);// ---- OpBoolOu -----
+                } else {
+                    //ERRO ---------------
+                }
+                
                 break;
             
             case '+': //+
@@ -206,34 +311,49 @@ public class AnaliseLexica {
                 return new Token("/", TipoToken.OpAritDiv); // ---- OpAritDiv -----
                 
             case ':': //: e :=
+                constroiLexema(c);
                 c = (char) ldat.lerProximoCaractere();
                 this.look_forward = c;
-                if (c == '=') return new Token(":=", TipoToken.Atrib); // ---- Atrib -----
-                else {
-                    return new Token(":", TipoToken.Delim); // ---- Delim -----
-                }
+                if (c != '=') {
+                    //ERRO ---------------
+                } else if (c == '=') return new Token(":=", TipoToken.Atrib); // ---- Atrib -----
+                return new Token(":", TipoToken.Delim); // ---- Delim -----
             
             case '<': //<= <
+                constroiLexema(c);
                 c = (char) ldat.lerProximoCaractere();
                 this.look_forward = c;
-                if (c == '=') return new Token("<=", TipoToken.OpRelMenorIgual); // ---- OpRelMenorIgual -----
+                if (c != '=') {
+                    //ERRO ---------------
+                } else if (c == '=') return new Token("<=", TipoToken.OpRelMenorIgual); // ---- OpRelMenorIgual -----
                 return new Token("<", TipoToken.OpRelMenor);  // ---- OpRelMenor -----
             
             case '>':  //> >=
+                constroiLexema(c);
                 c = (char) ldat.lerProximoCaractere();
                 this.look_forward = c;
-                if (c == '=') return new Token(">=", TipoToken.OpRelMaiorIgual); // ---- OpRelMaiorIgual -----
+                if (c != '=') {
+                    //ERRO ---------------
+                } else if (c == '=') return new Token(">=", TipoToken.OpRelMaiorIgual); // ---- OpRelMaiorIgual -----
                 return new Token(">", TipoToken.OpRelMaior);  // ---- OpRelMaior -----
             
             case '=': //  ==
                 this.look_forward = c;
+                constroiLexema(c);
                 c = (char) ldat.lerProximoCaractere();
-                if (c == '=') return new Token("==", TipoToken.OpRelIgual); // ---- OpRelIgual -----
+                if (c == '=') {
+                    return new Token("==", TipoToken.OpRelIgual);// ---- OpRelIgual -----
+                } else {
+                    //ERRO ---------------
+                }
                 
             case '!': //  !=
+                constroiLexema(c);
                 c = (char) ldat.lerProximoCaractere();
                 if (c == '=') {
                     return new Token("!=", TipoToken.OpRelDif); // ---- OpRelDif -----
+                } else {
+                    //ERRO ---------------
                 }
                 
             case '(': // (
@@ -251,7 +371,6 @@ public class AnaliseLexica {
             String numero = "";
             while(Character.isDigit(c) || c == '.') {
                 numero += Character.toString(c);
-                
                 c = (char) ldat.lerProximoCaractere();
             }
             if(numero.contains(String.valueOf('.'))){
