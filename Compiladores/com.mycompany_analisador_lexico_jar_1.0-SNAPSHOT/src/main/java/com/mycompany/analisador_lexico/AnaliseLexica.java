@@ -24,28 +24,33 @@ public class AnaliseLexica {
         throw new Error("Palavra " + palavra + " não pertence a linguagem!!\n");
     }
     
+    public char ignoraVazios( char c) {
+        while (c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == '#') {
+            if (c == '#') {
+                // Se for comentário, pula até o fim da linha
+                while (c != '\n' && c != '\r' && (int)c != -1) {
+                    c = (char) ldat.lerProximoCaractere();
+                }
+            }
+            if (c == ' ' || c == '\n' || c == '\r' || c == '\t') {
+                c = (char) ldat.lerProximoCaractere();
+            }
+        }
+        return c;
+    }
+    
     public Token NovoToken(){
         Token token = null;
         
         if (this.look_forward != '#') {
             char aux = this.look_forward;
             look_forward='#';
+            aux = ignoraVazios(aux);
             token = IdentificaToken(aux);
         } else {
             int caractere=ldat.lerProximoCaractere();
             char c=(char) caractere;
-            while (c == ' ' || c == '\n' || c == '\r' || c == '\t' || c == '#') {
-                if (c == '#') {
-                    // Se for comentário, pula até o fim da linha
-                    while (c != '\n' && c != '\r' && (int)c != -1) {
-                        c = (char) ldat.lerProximoCaractere();
-                    }
-                } else {
-                    // Se for espaço/quebra de linha, só lê o próximo
-                    c = (char) ldat.lerProximoCaractere();
-                }
-            }
-            System.out.println(c);
+            c = ignoraVazios(c);
             token = IdentificaToken(c);
         }
         return token;
@@ -74,6 +79,10 @@ public class AnaliseLexica {
                 nome_var += Character.toString(c);
                 c = (char) ldat.lerProximoCaractere();
             }
+            
+            if(!Character.isLowerCase(c) || !Character.isDigit(c)){
+                this.look_forward = c;
+            }
             return new Token(nome_var, TipoToken.Var); // ---- Var -----
         }
         
@@ -97,6 +106,9 @@ public class AnaliseLexica {
             while(c != '"') {
                 texto += Character.toString(c);
                 c = (char) ldat.lerProximoCaractere();
+                if((int)c == 65535) {
+                    lexemaInexistente("\"");
+                }
             }
             return new Token(texto, TipoToken.Cadeia); // ---- Cadeia -----
         }
@@ -113,9 +125,11 @@ public class AnaliseLexica {
                     if (c == 'C') {
                         return new Token("DEC", TipoToken.PCDec);
                     }  else {// ---- PCDec -----
+                        constroiLexema(c);
                         lexemaInexistente(this.lexema);
                     }
                 } else {
+                    constroiLexema(c);
                     lexemaInexistente(this.lexema);
                 }
                 break;
@@ -132,12 +146,15 @@ public class AnaliseLexica {
                         if (c == 'G') {
                             return new Token("PROG", TipoToken.PCProg); // ---- PCProg -----
                         } else {
+                            constroiLexema(c);
                             lexemaInexistente(this.lexema);
                         }
                     } else {
+                        constroiLexema(c);
                         lexemaInexistente(this.lexema);
                     }
                 } else {
+                    constroiLexema(c);
                     lexemaInexistente(this.lexema);
                 }
                 break;
@@ -157,6 +174,7 @@ public class AnaliseLexica {
                                 return new Token("INI", TipoToken.PCIni); // ---- PCIni -----
                             }
                             default -> {
+                                constroiLexema(c);
                                 lexemaInexistente(this.lexema);
                             }
                         }
@@ -182,26 +200,33 @@ public class AnaliseLexica {
                                             if(c == 'R') {
                                                 return new Token("IMPRIMIR", TipoToken.PCImprimir); // ---- PCImprimir -----
                                             } else {
-                                                    lexemaInexistente(this.lexema);
-                                                }
-                                        } else {
+                                                constroiLexema(c);
                                                 lexemaInexistente(this.lexema);
                                             }
+                                        } else {
+                                            constroiLexema(c);
+                                            lexemaInexistente(this.lexema);
+                                        }
                                     } else {
+                                        constroiLexema(c);
                                         lexemaInexistente(this.lexema);
                                     }
                                 } else {
+                                    constroiLexema(c);
                                     lexemaInexistente(this.lexema);
                                 }
                             } else {
+                                constroiLexema(c);
                                 lexemaInexistente(this.lexema);
                             }
                         } else {
+                            constroiLexema(c);
                             lexemaInexistente(this.lexema);
                         }
                     default: 
+                        constroiLexema(c);
                         lexemaInexistente(this.lexema);
-                }
+                    }
                 break;
             
             case 'L': //LER
@@ -213,9 +238,11 @@ public class AnaliseLexica {
                     if (c == 'R') {
                         return new Token("LER", TipoToken.PCLer); // ---- PCLer -----
                     } else {
+                        constroiLexema(c);
                         lexemaInexistente(this.lexema);
                     }
                 } else {
+                    constroiLexema(c);
                     lexemaInexistente(this.lexema);
                 }
                 break;
@@ -232,12 +259,15 @@ public class AnaliseLexica {
                         if (c == 'L') {
                             return new Token("REAL", TipoToken.PCReal); // ---- PCReal -----
                         } else {
+                            constroiLexema(c);
                             lexemaInexistente(this.lexema);
                         } 
                     } else {
+                        constroiLexema(c);
                         lexemaInexistente(this.lexema);
                     }
                 } else {
+                    constroiLexema(c);                    
                     lexemaInexistente(this.lexema);
                 }
                 break;
@@ -262,13 +292,16 @@ public class AnaliseLexica {
                             if(c == 'O') {
                                 return new Token("SENAO", TipoToken.PCSenao); // ---- PCSenao -----
                             } else {
+                                constroiLexema(c);
                                 lexemaInexistente(this.lexema);
                             }
                         } else {
+                            constroiLexema(c);
                             lexemaInexistente(this.lexema);
                         }
                     }
                 } else {
+                    constroiLexema(c);
                     lexemaInexistente(this.lexema);
                 }
                 break;
@@ -278,7 +311,7 @@ public class AnaliseLexica {
                 c = (char) ldat.lerProximoCaractere();
                 this.look_forward = c;
                 if(c != 'N') {
-                    this.look_forward = c;
+                    this.look_forward = '#';
                     return new Token("E", TipoToken.OpBoolE);
                 } // ---- OpBoolE -----
                 else {
@@ -295,9 +328,11 @@ public class AnaliseLexica {
                                     this.look_forward = '#';
                                     return new Token("ENQTO", TipoToken.PCEnqto); // ---- PCEnqto -----
                                 } else {
+                                    constroiLexema(c);
                                     lexemaInexistente(this.lexema);
                                 }
                             } else {
+                                constroiLexema(c);
                                 lexemaInexistente(this.lexema);
                             }
                         }
@@ -311,13 +346,16 @@ public class AnaliseLexica {
                                     this.look_forward = '#';
                                     return new Token("ENTAO", TipoToken.PCEntao); // ---- PCEntao -----
                                 } else {
+                                    constroiLexema(c);
                                     lexemaInexistente(this.lexema);
                                 }
                             } else {
+                                constroiLexema(c);
                                 lexemaInexistente(this.lexema);
                             }
                         }
                         default -> {
+                            constroiLexema(c);
                             lexemaInexistente(this.lexema);
                         }
                     }
@@ -333,9 +371,11 @@ public class AnaliseLexica {
                     if (c == 'M') {
                         return new Token("FIM", TipoToken.PCFim); // ---- PCFim -----
                     }  else {
+                        constroiLexema(c);
                         lexemaInexistente(this.lexema);
                     }
                 } else {
+                    constroiLexema(c);
                     lexemaInexistente(this.lexema);
                 }
                 break;
@@ -346,6 +386,7 @@ public class AnaliseLexica {
                 if (c == 'U') { 
                     return new Token("OU", TipoToken.OpBoolOu);// ---- OpBoolOu -----
                 } else {
+                    constroiLexema(c);
                     lexemaInexistente(this.lexema);
                 }
                 
@@ -376,9 +417,7 @@ public class AnaliseLexica {
                 constroiLexema(c);
                 c = (char) ldat.lerProximoCaractere();
                 this.look_forward = c;
-                if (c != '=') {
-                    lexemaInexistente(this.lexema);
-                } else if (c == '=') {
+                if (c == '=') {
                     this.look_forward = '#';
                     return new Token("<=", TipoToken.OpRelMenorIgual);
                 } // ---- OpRelMenorIgual -----
@@ -403,6 +442,7 @@ public class AnaliseLexica {
                     this.look_forward = '#';
                     return new Token("==", TipoToken.OpRelIgual);// ---- OpRelIgual -----
                 } else {
+                    constroiLexema(c);
                     lexemaInexistente(this.lexema);
                 }
                 
@@ -412,6 +452,7 @@ public class AnaliseLexica {
                 if (c == '=') {
                     return new Token("!=", TipoToken.OpRelDif); // ---- OpRelDif -----
                 } else {
+                    constroiLexema(c);
                     lexemaInexistente(this.lexema);
                 }
                 

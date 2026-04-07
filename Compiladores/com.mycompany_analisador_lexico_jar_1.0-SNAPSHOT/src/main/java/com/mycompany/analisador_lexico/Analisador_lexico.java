@@ -11,13 +11,13 @@ package com.mycompany.analisador_lexico;
 public class Analisador_lexico {
 
     public static void main(String[] args) {
-        AnaliseLexica lex=new AnaliseLexica("programa2.gyh");
+        AnaliseLexica lex=new AnaliseLexica("programa12.gyh");
         Token token;
         
         do {
             token = lex.NovoToken();
             if(token == null) break;
-            System.out.print(token.toString());
+            System.out.println(token.toString());
         } while (true);
         
     }
