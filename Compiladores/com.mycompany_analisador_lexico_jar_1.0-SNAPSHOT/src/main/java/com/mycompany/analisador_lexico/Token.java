@@ -12,6 +12,7 @@ public class Token {
     private final TipoToken padrao;
     private final String lexema;
     
+    
     @Override
     public String toString(){
         return "<"+this.lexema+","+this.padrao+">";
@@ -20,5 +21,13 @@ public class Token {
     public Token(String lexema, TipoToken padrao) {
         this.lexema=lexema;
         this.padrao=padrao;
+    }
+    
+    public String getLexema() {
+        return this.lexema;
+    }
+    
+    public TipoToken getPadrao() {
+        return this.padrao;
     }
 }
