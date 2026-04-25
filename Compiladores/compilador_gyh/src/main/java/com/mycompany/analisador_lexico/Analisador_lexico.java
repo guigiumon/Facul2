@@ -17,7 +17,7 @@ public class Analisador_lexico {
         AnaliseLexica lex=new AnaliseLexica("programa11.gyh");
         Token token;
         
-        
+        //a
         do {
             token = lex.NovoToken();
             if(token == null) break;
