@@ -4,10 +4,16 @@
  */
 package com.mycompany.analisador_sintatico;
 
+import com.mycompany.analisador_lexico.Token;
+import java.util.List;
+
 /**
  *
  * @author Adm
  */
 public class Analisador_sintatico {
     
+    public Analisador_sintatico(List<Token> lista_tokens) {
+        
+    }
 }
