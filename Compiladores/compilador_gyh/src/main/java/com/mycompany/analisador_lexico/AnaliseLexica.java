@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.mycompany.analisador_lexico;
+import com.mycompany.Tabela_de_simbolos;
 
 /**
  *
@@ -83,6 +84,9 @@ public class AnaliseLexica {
             if(!Character.isLowerCase(c) || !Character.isDigit(c)){
                 this.look_forward = c;
             }
+            
+            Tabela_de_simbolos.getTable().tabela.put(nome_var, 0); //adiciona item na tabela de simbolos
+            
             return new Token(nome_var, TipoToken.Var); // ---- Var -----
         }
         

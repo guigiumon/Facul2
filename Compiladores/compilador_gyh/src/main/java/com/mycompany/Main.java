@@ -15,7 +15,9 @@ public class Main {
     public static void main(String[] args) {
         Analisador_lexico analise_lexica = new Analisador_lexico("programa1.gyh");
         analise_lexica.getTokens();
-           
+        
+        
+        
         Analisador_sintatico analise_sintatica = new Analisador_sintatico(analise_lexica.getTokens());
     }
 }
