@@ -16,8 +16,6 @@ public class Main {
         Analisador_lexico analise_lexica = new Analisador_lexico("programa1.gyh");
         analise_lexica.getTokens();
         
-        
-        
         Analisador_sintatico analise_sintatica = new Analisador_sintatico(analise_lexica.getTokens());
     }
 }

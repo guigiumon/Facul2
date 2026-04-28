@@ -5,6 +5,7 @@
 package com.mycompany.analisador_sintatico;
 
 import com.mycompany.analisador_lexico.Token;
+import com.mycompany.Tabela_de_simbolos;
 import java.util.List;
 
 /**
